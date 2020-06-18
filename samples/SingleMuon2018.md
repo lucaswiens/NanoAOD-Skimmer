@@ -1,0 +1,4 @@
+/SingleMuon/Run2018A-Nano25Oct2019-v1/NANOAOD
+/SingleMuon/Run2018B-Nano25Oct2019-v1/NANOAOD
+/SingleMuon/Run2018C-Nano25Oct2019-v1/NANOAOD
+/SingleMuon/Run2018D-Nano25Oct2019-v1/NANOAOD

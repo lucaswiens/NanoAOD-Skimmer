@@ -1,0 +1,14 @@
+#Template for the submit files created by createFileList.py
+executable          = @EXECUTABLE
+#transfer_executable = True
+#WhenToTransferOutput = On_Exit
+ShouldTransferFiles  = yes
+Transfer_Input_Files = @X509
+#+IsFastQueueJob      = True
+universe            = vanilla
++RequestRuntime     = @TIME
+#input               = /nfs/dust/my/path/to/data/mypayload.data
+output              = @LOGS/mypayload_$(Cluster)_$(Process)out
+error               = @LOGS/mypayload_$(Cluster)_$(Process).error
+log                 = @LOGS/mypayload_$(Cluster)_$(Process).log
+Queue 1
