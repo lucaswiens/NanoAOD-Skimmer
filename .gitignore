@@ -1,1 +1,3 @@
 batch
+*.pyc
+*__init__.py
