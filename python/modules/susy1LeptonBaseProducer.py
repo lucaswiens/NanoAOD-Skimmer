@@ -230,5 +230,5 @@ class susy1LeptonBaseProducer(Module):
 
 
 # define modules using the syntax 'name = lambda: constructor' to avoid having them loaded when not needed
-susy1LeptonProducer = lambda : susy1LeptonBaseProducer()
+susy1LeptonBase = lambda : susy1LeptonBaseProducer()
 

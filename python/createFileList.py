@@ -55,7 +55,7 @@ def prepareModuleListAndArguments(sample):
 		module = ""#,xsec,genpartsusymod
 		if year == 2016:
 			#module +="preFireCorr2016"
-			module +="susy1LeptonProducer"
+			module +="susy1LeptonBase"
 		if year == 2017:
 			# Temporarly use the jetmet uncertainty for 2016
 			module +="preFireCorr2017"
@@ -65,8 +65,8 @@ def prepareModuleListAndArguments(sample):
 	elif isMC and isSig:
 		module = ""#,xsec,genpartsusymod
 			# Temporarly use the jetmet uncertainty for 2016
-		if year == 2016: module +="susy1LeptonProducer"
-		if year == 2017: module +="susy1LeptonProducer"
+		if year == 2016: module +="susy1LeptonBase"
+		if year == 2017: module +="susy1LeptonBase"
 		#if year == 2016: module +="preFireCorr2016,lepSF,btagSF2016"
 		#if year == 2017: module +="preFireCorr2017,lepSF,btagSF2017"
 	else:
