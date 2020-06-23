@@ -55,7 +55,7 @@ def prepareModuleListAndArguments(sample):
 		module = ""#,xsec,genpartsusymod
 		if year == 2016:
 			#module +="preFireCorr2016"
-			module +="susy1LeptonBase"
+			module +="susy1LeptonProducer"
 		if year == 2017:
 			# Temporarly use the jetmet uncertainty for 2016
 			module +="preFireCorr2017"
@@ -65,8 +65,8 @@ def prepareModuleListAndArguments(sample):
 	elif isMC and isSig:
 		module = ""#,xsec,genpartsusymod
 			# Temporarly use the jetmet uncertainty for 2016
-		if year == 2016: module +="susy1LeptonBase"
-		if year == 2017: module +="susy1LeptonBase"
+		if year == 2016: module +="susy1LeptonProducer"
+		if year == 2017: module +="susy1LeptonProducer"
 		#if year == 2016: module +="preFireCorr2016,lepSF,btagSF2016"
 		#if year == 2017: module +="preFireCorr2017,lepSF,btagSF2017"
 	else:
@@ -90,20 +90,20 @@ def getOSVariable(Var):
 
 
 if __name__=="__main__":
+	date = subprocess.check_output("date +\"%Y_%m_%d\"", shell=True).replace("\n", "")
 	parser = argparse.ArgumentParser(description="Runs a NAF batch system for nanoAOD", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 	parser.add_argument("-i", "--input-file", required=True, help="Path to the file containing a list of samples.")
-	parser.add_argument("-o", "--output", help="Path to the output directory", default = "batch/" + subprocess.check_output("date +\"%Y_%m_%d\"", shell=True).replace("\n", ""))
+	parser.add_argument("-o", "--output", help="Path to the output directory", default = "batch/" + date)
 
 	args = parser.parse_args()
 
 	cmsswBase = getOSVariable("CMSSW_BASE")
-	workarea = "%s/src/NanoAODSkimmer/batch" % cmsswBase
+	workarea = "%s/src/Susy1LeptonAnalysis/NanoAODSkimmer/batch" % cmsswBase
 	#X509 = getOSVariable("X509_USER_PROXY")
 	X509 = "/tmp/x509up_u33974"
 
 	condTEMP = "./templates/submit.condor"
 	wrapTEMP = "./templates/wrapnanoPost.sh"
-	SkimTEMP = "./templates/Skim_tree.py"
 
 	if  os.path.exists(args.output):
 		keepDirectory = raw_input("Output directory already exists: " + str(args.output) + " Do you want to remove it [y/n]: ")
@@ -132,7 +132,6 @@ if __name__=="__main__":
 	for sample in sampleFile:
 		sample = sample.strip()
 		if not (sample.startswith("#") or sample in ["", "\n", "\r\n"]):
-			print(sample)
 			fileList = createFileList(sample)
 			moduleList, isMC, isSig, year, runPeriod, isFastSim = prepareModuleListAndArguments(sample)
 			sampleName = sample.replace("/", "_")[1:]
@@ -144,9 +143,7 @@ if __name__=="__main__":
 
 			i = 1
 			logDirectory = args.output + "/logs"
-			os.system("cp " + SkimTEMP + " " + args.output)
 			for filename in fileList:
-				print(filename)
 				os.system("cp " + condTEMP + " " + args.output + "/condor/" + sampleName + str(i) + ".submit")
 				submitFileContent = open(args.output + "/condor/" + sampleName + str(i) + ".submit").read()
 				submitFileContent = submitFileContent.replace("@EXECUTABLE", args.output + "/wrapper/" + sampleName + str(i))
@@ -158,8 +155,7 @@ if __name__=="__main__":
 				submitFile.write(submitFileContent)
 				submitFile.close()
 
-				skimTreeInput = "".join(filename.split("/")[3:]).replace(".root", "_Skim.root")
-
+				skimTreeOutput = "_".join(filename.split("/")[3:5])
 				os.system("cp " + wrapTEMP + " " + args.output + "/wrapper/" + sampleName + str(i))
 				wrapperFileContent = open(args.output + "/wrapper/" + sampleName + str(i)).read()
 				wrapperFileContent = wrapperFileContent.replace("@WORKDIR", workarea)
@@ -169,12 +165,10 @@ if __name__=="__main__":
 				wrapperFileContent = wrapperFileContent.replace("@ISFASTSIM", "--is-fastsim"*isFastSim)
 				wrapperFileContent = wrapperFileContent.replace("@YEAR", str(year))
 				wrapperFileContent = wrapperFileContent.replace("@RUNPERIOD", runPeriod)
-				wrapperFileContent = wrapperFileContent.replace("@OUTPUT", args.output)
+				wrapperFileContent = wrapperFileContent.replace("@OUTPUT", "SkimmingOutput/" + date + "/" + skimTreeOutput)
 				wrapperFileContent = wrapperFileContent.replace("@SKIMTREELOCATION", args.output)
 				wrapperFileContent = wrapperFileContent.replace("@INPUTFILE", "root://cms-xrd-global.cern.ch/" + filename)
 				wrapperFileContent = wrapperFileContent.replace("@X509", X509)
-				wrapperFileContent = wrapperFileContent.replace("@STEP1", skimTreeInput)
-				wrapperFileContent = wrapperFileContent.replace("@TRIM", "tree/" + skimTreeInput.replace("_Skim.root", "_Trim.root"))
 
 				wrapperFile = open(args.output + "/wrapper/" + sampleName + str(i), "w")
 				wrapperFile.write(wrapperFileContent)
@@ -183,7 +177,6 @@ if __name__=="__main__":
 				file.write("condor_submit -name s02 " + args.output + "/condor/" + sampleName + str(i) + ".submit\n")
 				file.close()
 				i +=1
-			print("\r")
 	os.system("chmod +744 " + args.output + "/submitAllViaHTC")
 	print "submitAllViaHTC created in " + args.output + " to submit all jobs"
 	sampleFile.close()

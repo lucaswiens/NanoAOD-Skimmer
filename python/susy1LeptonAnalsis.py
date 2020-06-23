@@ -1,5 +1,6 @@
 # Selection Modules
-from Susy1LeptonAnalysis.NanoAODSkimmer.modules.susy1LeptonProducer import susy1LeptonBase
+from Susy1LeptonAnalysis.NanoAODSkimmer.modules.susy1LeptonProducer import susy1LeptonProducer
+from Susy1LeptonAnalysis.NanoAODSkimmer.modules.susy1LeptonBaseSelector import susy1LeptonSelector
 ## from PhysicsTools.NanoAODTools.postprocessing.modules.selection.selectionProducer import selection
 ##
 ## #from PhysicsTools.NanoAODTools.postprocessing.modules.susy.genParticleProducer import genAll

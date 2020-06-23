@@ -15,5 +15,3 @@ cd ${exedir}
 export X509_USER_PROXY=@X509
 voms-proxy-info -all
 nano_postproc.py -I Susy1LeptonAnalysis.NanoAODSkimmer.susy1LeptonAnalsis @MODULES -b $CMSSW_BASE/src/PhysicsTools/NanoAODTools/data/keep_or_drop.txt @ISMC --year @YEAR --run-period @RUNPERIOD @ISFASTSIM @OUTPUT @INPUTFILE
-python @SKIMTREELOCATION/Skim_tree.py --infile @OUTPUT/@STEP1 --outfile @OUTPUT/@TRIM
-rm -rf @OUTPUT/@STEP1
