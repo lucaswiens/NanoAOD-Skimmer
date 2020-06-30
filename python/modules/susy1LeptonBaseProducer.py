@@ -11,7 +11,7 @@ from leptonselector import leptonSel
 import susyCutter
 
 class susy1LeptonBaseProducer(Module):
-	def __init__(self, isMC=True , isSignal=False, era=2016, muonSelectionTag, electronSelectionTag):
+	def __init__(self, isMC=True , isSignal=False, era=2016, muonSelectionTag = "MediumWP_2016", electronSelectionTag = "TightWP_2016"):
 		self.isMC = isMC
 		self.isSignal = isSignal
 		self.era = era
@@ -54,7 +54,7 @@ class susy1LeptonBaseProducer(Module):
 					electronFile = ["EGM2D_eleGSF17.root","EGM2D_eleMVA90_17.root"]
 					electronHistogram = ["EGamma_SF2D", "EGamma_SF2D"]
 			else :
-				raise ValueError("ERROR: Invalid era = '%s'!" % self.era)
+				raise ValueError("ERROR: Invalid era = '%i'!" % self.era)
 
 		if self.isMC:
 			muonFile = ["%s/src/PhysicsTools/NanoAODTools/python/postprocessing/data/leptonSF/" % os.environ['CMSSW_BASE'] + f for f in muonFile]
