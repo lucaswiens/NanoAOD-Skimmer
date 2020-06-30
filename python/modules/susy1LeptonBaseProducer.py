@@ -1,5 +1,6 @@
 import ROOT
 import array
+import os
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
@@ -18,6 +19,8 @@ class susy1LeptonBaseProducer(Module):
 		self.mt2obj = ROOT.heppy.Davismt2.Davismt2()
 		self.muonSelectionTag = muonSelectionTag
 		self.electronSelectionTag = electronSelectionTag
+		muonFile, electronFile = [], [] #For some reason python complains about electronFile being referenced before its assignment unless it is declared here..
+
 		if isMC:
 			if self.era == 2016:
 				if self.muonSelectionTag=="LooseWP_2016":
@@ -36,7 +39,7 @@ class susy1LeptonBaseProducer(Module):
 				if self.electronSelectionTag=="Tight_2016":
 					electronFile = ["EGM2D_eleGSF.root","EGM2D_eleMVA90.root"]
 					electronHistogram = ["EGamma_SF2D", "EGamma_SF2D"]
-			if self.era == 2017:
+			elif self.era == 2017:
 				if self.muonSelectionTag=="LooseWP_2017":
 					muonFile=["Mu_Trg17.root","Mu_ID17.root","Mu_Iso17.root"]
 					muonHistogram = ["IsoMu27_PtEtaBins/pt_abseta_ratio",
