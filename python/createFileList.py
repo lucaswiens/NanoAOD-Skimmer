@@ -51,29 +51,18 @@ def prepareModuleListAndArguments(sample):
 	if "/SMS-T1tttt" in sample:
 		isSig = True
 	if isMC and not isSig:
-		#module = "susy_1l_FiltersMC,jecUncert,susy1lepTOPMC,susy_1l_gen"#,xsec,genpartsusymod
-		module = ""#,xsec,genpartsusymod
+		module = ""
 		if year == 2016:
-			#module +="preFireCorr2016"
-			module +="susy1LeptonBase"
+			module +="susy1LeptonBase2016"
 		if year == 2017:
-			# Temporarly use the jetmet uncertainty for 2016
-			module +="preFireCorr2017"
-		# if "TTJets" in str(sample) and year == 2016: module +=",susy_1l_nISR16,susy1lepTT_syst"
-		# if "TTJets" in str(sample) and year == 2017: module +=",susy_1l_nISR17,susy1lepTT_syst"
-		# if "WJets"  in str(sample): module +=",susy1lepWJets_syst"
+			module +="susy1LeptonBase2017"
 	elif isMC and isSig:
 		module = ""#,xsec,genpartsusymod
-			# Temporarly use the jetmet uncertainty for 2016
-		if year == 2016: module +="susy1LeptonBase"
-		if year == 2017: module +="susy1LeptonBase"
-		#if year == 2016: module +="preFireCorr2016,lepSF,btagSF2016"
-		#if year == 2017: module +="preFireCorr2017,lepSF,btagSF2017"
+		if year == 2016: module +="susy1LeptonBaseSignal2016"
+		elif year == 2017: module +="susy1LeptonBaseSignal2017"
 	else:
-		if year == 2016:
-			module = ""
-		elif year == 2017:
-			module = ""
+		if year == 2016: module +="susy1LeptonBaseSignal2016"
+		if year == 2017: module +="susy1LeptonBaseSignal2017"
 
 	if not isMC:
 		runPeriod = findall("Run201..", sample)[0][-1]
@@ -98,7 +87,7 @@ if __name__=="__main__":
 	args = parser.parse_args()
 
 	cmsswBase = getOSVariable("CMSSW_BASE")
-	workarea = "%s/src/Susy1LeptonAnalysis/NanoAODSkimmer/batch" % cmsswBase
+	workarea = "%s/src/Susy1LeptonAnalysis/NanoAODSkimmer/batch/" % cmsswBase + date
 	#X509 = getOSVariable("X509_USER_PROXY")
 	X509 = "/tmp/x509up_u33974"
 
@@ -146,7 +135,7 @@ if __name__=="__main__":
 			for filename in fileList:
 				os.system("cp " + condTEMP + " " + args.output + "/condor/" + sampleName + str(i) + ".submit")
 				submitFileContent = open(args.output + "/condor/" + sampleName + str(i) + ".submit").read()
-				submitFileContent = submitFileContent.replace("@EXECUTABLE", args.output + "/wrapper/" + sampleName + str(i))
+				submitFileContent = submitFileContent.replace("@EXECUTABLE", "wrapper/" + sampleName + str(i))
 				submitFileContent = submitFileContent.replace("@LOGS", logDirectory)
 				submitFileContent = submitFileContent.replace("@X509", X509)
 				submitFileContent = submitFileContent.replace("@TIME", "60*60*48")
@@ -165,7 +154,7 @@ if __name__=="__main__":
 				wrapperFileContent = wrapperFileContent.replace("@ISFASTSIM", "--is-fastsim"*isFastSim)
 				wrapperFileContent = wrapperFileContent.replace("@YEAR", str(year))
 				wrapperFileContent = wrapperFileContent.replace("@RUNPERIOD", runPeriod)
-				wrapperFileContent = wrapperFileContent.replace("@OUTPUT", "SkimmingOutput/" + date + "/" + skimTreeOutput)
+				wrapperFileContent = wrapperFileContent.replace("@OUTPUT", "output/" + skimTreeOutput)
 				wrapperFileContent = wrapperFileContent.replace("@SKIMTREELOCATION", args.output)
 				wrapperFileContent = wrapperFileContent.replace("@INPUTFILE", "root://cms-xrd-global.cern.ch/" + filename)
 				wrapperFileContent = wrapperFileContent.replace("@X509", X509)
@@ -174,7 +163,7 @@ if __name__=="__main__":
 				wrapperFile.write(wrapperFileContent)
 				wrapperFile.close()
 				file = open(args.output + "/submitAllViaHTC", "a")
-				file.write("condor_submit -name s02 " + args.output + "/condor/" + sampleName + str(i) + ".submit\n")
+				file.write("condor_submit -name s02 " + "condor/" + sampleName + str(i) + ".submit\n")
 				file.close()
 				i +=1
 	os.system("chmod +744 " + args.output + "/submitAllViaHTC")
