@@ -630,9 +630,9 @@ class susy1LeptonBaseProducer(Module):
 		return True
 
 # define modules using the syntax 'name = lambda: constructor' to avoid having them loaded when not needed
-susy1LeptonBase2016 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = False, era = 2016)
-susy1LeptonBase2017 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = False, era = 2016)
-susy1LeptonBaseSignal2016 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = True, era = 2016)
-susy1LeptonBaseSignal2017 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = True, era = 2016)
-susy1LeptonBaseData2016 = lambda : susy1LeptonBaseProducer(isMC = False, isSignal = False, era = 2016)
-susy1LeptonBaseData2017 = lambda : susy1LeptonBaseProducer(isMC = False, isSignal = False, era = 2016)
+susy1LeptonBase2016 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = False, era = 2016, muonSelectionTag = "MediumWP_2016", electronSelectionTag = "TightWP_2016")
+susy1LeptonBase2017 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = False, era = 2017, muonSelectionTag = "MediumWP_2017", electronSelectionTag = "TightWP_2017")
+susy1LeptonBaseSignal2016 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = True, era = 2016, muonSelectionTag = "MediumWP_2016", electronSelectionTag = "TightWP_2016")
+susy1LeptonBaseSignal2017 = lambda : susy1LeptonBaseProducer(isMC = True, isSignal = True, era = 2017, muonSelectionTag = "MediumWP_2017", electronSelectionTag = "TightWP_2017")
+susy1LeptonBaseData2016 = lambda : susy1LeptonBaseProducer(isMC = False, isSignal = False, era = 2016, muonSelectionTag = "MediumWP_2016", electronSelectionTag = "TightWP_2016")
+susy1LeptonBaseData2017 = lambda : susy1LeptonBaseProducer(isMC = False, isSignal = False, era = 2017, muonSelectionTag = "MediumWP_2017", electronSelectionTag = "TightWP_2017")
